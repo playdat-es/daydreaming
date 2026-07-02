@@ -1,10 +1,10 @@
 import { APP_PRODUCT_NAME } from "../shared/branding.js";
 import { createApp } from "./app.js";
-import { createDb } from "./db/index.js";
+import { type Db, createDb } from "./db/index.js";
 import { env } from "./env.js";
 
 async function main(): Promise<void> {
-  let db;
+  let db: Db;
   try {
     db = await createDb(env);
   } catch (err) {
@@ -18,14 +18,23 @@ async function main(): Promise<void> {
     console.log(`${APP_PRODUCT_NAME} running on http://localhost:${env.PORT}`);
   });
 
-  function shutdown(signal: string): void {
+  async function shutdown(signal: string): Promise<void> {
     console.log(`${signal} received, shutting down`);
-    server.close(() => process.exit(0));
-    setTimeout(() => process.exit(1), 10_000).unref();
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+    const client = (db as { $client?: { close?: () => Promise<void> } })
+      .$client;
+    if (client?.close) await client.close();
+    process.exit(0);
   }
 
   for (const sig of ["SIGTERM", "SIGINT"] as const) {
-    process.on(sig, () => shutdown(sig));
+    process.on(sig, () => {
+      shutdown(sig).catch((err) => {
+        console.error("shutdown failed", err);
+        process.exit(1);
+      });
+      setTimeout(() => process.exit(1), 10_000).unref();
+    });
   }
 }
 
