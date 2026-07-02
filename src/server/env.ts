@@ -14,6 +14,7 @@ const envSchema = z.object({
         .map((o) => o.trim())
         .filter(Boolean),
     ),
+  DATABASE_URL: z.string().url().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

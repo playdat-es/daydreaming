@@ -1,9 +1,16 @@
 import request from "supertest";
-import { describe, expect, test } from "vitest";
+import { beforeAll, describe, expect, test } from "vitest";
+import type { Express } from "express";
 import { createApp } from "./app.js";
+import { createPgliteDb } from "./db/pglite.js";
 
 describe("api routes", () => {
-  const app = createApp();
+  let app: Express;
+
+  beforeAll(async () => {
+    const db = await createPgliteDb();
+    app = createApp({ db });
+  });
 
   test("GET /api/ping returns pong", async () => {
     const res = await request(app).get("/api/ping");

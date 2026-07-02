@@ -15,3 +15,6 @@
 ## Code style
 - Self-documenting names. If a name needs a comment to explain what it does, rename it.
 - Comments: brief — one line where possible, no over-explaining.
+
+## Database
+- Migration name: pass `--name <slug>` when generating (e.g. `--name add_users`).

@@ -31,6 +31,17 @@ jobs:
 
       - run: npm run lint
 
+      - name: Verify schema migrations are committed
+        env:
+          DATABASE_URL: postgres://ci:ci@localhost:5432/ci
+        run: |
+          npm run db:generate
+          git add -N drizzle
+          if ! git diff --exit-code -- drizzle src/server/db/schema.ts; then
+            echo "::error::Schema changed but migration was not committed. Run 'npm run db:generate' locally and commit the result."
+            exit 1
+          fi
+
       - name: Test with coverage
         run: npm run test:coverage
 
