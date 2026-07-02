@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
 language: en-US
-tone_instructions: "Be concise and direct. Focus on correctness, races, and resource leaks."
+tone_instructions: "Be concise and direct. Don't over-explain."
 
 reviews:
   profile: chill
