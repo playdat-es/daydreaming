@@ -14,7 +14,7 @@ describe("api routes", () => {
     app = createApp({ db: inst.db });
   });
 
-  afterAll(() => close());
+  afterAll(() => close?.());
 
   test("GET /api/ping returns pong", async () => {
     const res = await request(app).get("/api/ping");

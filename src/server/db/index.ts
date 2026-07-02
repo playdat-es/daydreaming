@@ -10,6 +10,10 @@ export async function createDb(
     const { createNeonDb } = await import("./neon.js");
     return createNeonDb(env.DATABASE_URL);
   }
+  if (env.NODE_ENV === "production") {
+    throw new Error("DATABASE_URL is required in production");
+  }
+  console.log("DATABASE_URL not set, using local PGlite at .pglite");
   const { createPgliteDb } = await import("./pglite.js");
   return createPgliteDb(".pglite");
 }

@@ -1,5 +1,7 @@
-import "dotenv/config";
+import { config } from "dotenv";
 import { z } from "zod";
+
+config({ quiet: true });
 
 const emptyAsUndefined = <T extends z.ZodTypeAny>(schema: T) =>
   z.preprocess((v) => (v === "" ? undefined : v), schema);
@@ -24,7 +26,3 @@ const envSchema = z.object({
 export type Env = z.infer<typeof envSchema>;
 
 export const env: Env = envSchema.parse(process.env);
-
-if (env.NODE_ENV === "production" && !env.DATABASE_URL) {
-  throw new Error("DATABASE_URL is required in production");
-}

@@ -23,8 +23,11 @@ async function main(): Promise<void> {
     process.exit(0);
   }
 
+  let shuttingDown = false;
   for (const sig of ["SIGTERM", "SIGINT"] as const) {
     process.on(sig, () => {
+      if (shuttingDown) return;
+      shuttingDown = true;
       shutdown(sig).catch((err) => {
         console.error("shutdown failed", err);
         process.exit(1);
