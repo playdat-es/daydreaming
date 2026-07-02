@@ -5,7 +5,7 @@ import express, { type Express } from "express";
 import type { Db } from "./db/index.js";
 import { env } from "./env.js";
 import { errorHandler, notFoundHandler } from "./error-handler.js";
-import { apiRouter } from "./routes.js";
+import { createApiRouter } from "./routes.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -13,14 +13,14 @@ export interface AppDeps {
   db: Db;
 }
 
-export function createApp(_deps: AppDeps): Express {
+export function createApp(deps: AppDeps): Express {
   const app = express();
 
   app.use(
     cors({ origin: env.CORS_ORIGINS.length > 0 ? env.CORS_ORIGINS : true }),
   );
   app.use(express.json());
-  app.use("/api", apiRouter);
+  app.use("/api", createApiRouter(deps));
   app.use("/api", notFoundHandler);
 
   if (env.NODE_ENV === "production") {
