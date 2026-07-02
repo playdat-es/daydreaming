@@ -1,6 +1,6 @@
 import { APP_PRODUCT_NAME } from "../shared/branding.js";
 import { createApp } from "./app.js";
-import { type Db, createDb } from "./db/index.js";
+import { createDb, type Db } from "./db/index.js";
 import { env } from "./env.js";
 
 async function main(): Promise<void> {

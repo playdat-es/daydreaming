@@ -15,8 +15,9 @@ describe("api routes", () => {
   });
 
   afterAll(async () => {
-    await (db as unknown as { $client: { close: () => Promise<void> } })
-      .$client.close();
+    await (
+      db as unknown as { $client: { close: () => Promise<void> } }
+    ).$client.close();
   });
 
   test("GET /api/ping returns pong", async () => {
