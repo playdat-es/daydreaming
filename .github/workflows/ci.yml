@@ -32,8 +32,6 @@ jobs:
       - run: npm run lint
 
       - name: Verify schema migrations are committed
-        env:
-          DATABASE_URL: postgres://ci:ci@localhost:5432/ci
         run: |
           npm run db:generate
           git add -N drizzle

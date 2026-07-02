@@ -4,18 +4,10 @@ dotenv.config({ quiet: true });
 
 import { APP_PRODUCT_NAME } from "../shared/branding.js";
 import { createApp } from "./app.js";
-import { createNeonDb } from "./db/index.js";
-import { createPgliteDb } from "./db/pglite.js";
+import { createDb } from "./db/index.js";
 import { env } from "./env.js";
 
-if (env.NODE_ENV === "production" && !env.DATABASE_URL) {
-  throw new Error("DATABASE_URL is required in production");
-}
-
-const db = env.DATABASE_URL
-  ? createNeonDb(env.DATABASE_URL)
-  : await createPgliteDb(".pglite");
-
+const db = await createDb(env);
 const app = createApp({ db });
 
 const server = app.listen(env.PORT, "0.0.0.0", () => {

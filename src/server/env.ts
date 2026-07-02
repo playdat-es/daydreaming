@@ -1,21 +1,31 @@
 import { z } from "zod";
 
-const envSchema = z.object({
-  NODE_ENV: z
-    .enum(["development", "test", "production"])
-    .default("development"),
-  PORT: z.coerce.number().int().positive().default(3001),
-  CORS_ORIGINS: z
-    .string()
-    .default("")
-    .transform((s) =>
-      s
-        .split(",")
-        .map((o) => o.trim())
-        .filter(Boolean),
-    ),
-  DATABASE_URL: z.string().url().optional(),
-});
+const envSchema = z
+  .object({
+    NODE_ENV: z
+      .enum(["development", "test", "production"])
+      .default("development"),
+    PORT: z.coerce.number().int().positive().default(3001),
+    CORS_ORIGINS: z
+      .string()
+      .default("")
+      .transform((s) =>
+        s
+          .split(",")
+          .map((o) => o.trim())
+          .filter(Boolean),
+      ),
+    DATABASE_URL: z.string().url().optional(),
+  })
+  .superRefine((e, ctx) => {
+    if (e.NODE_ENV === "production" && !e.DATABASE_URL) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["DATABASE_URL"],
+        message: "DATABASE_URL is required in production",
+      });
+    }
+  });
 
 export type Env = z.infer<typeof envSchema>;
 
