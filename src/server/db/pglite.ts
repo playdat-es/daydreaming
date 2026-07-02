@@ -10,8 +10,11 @@ const migrationsFolder = path.resolve(
   "../../../drizzle",
 );
 
-export async function createPgliteDb(dataDir?: string): Promise<Db> {
-  const db = drizzle(new PGlite(dataDir), drizzleOptions);
+export async function createPgliteDb(
+  dataDir?: string,
+): Promise<{ db: Db; close: () => Promise<void> }> {
+  const client = new PGlite(dataDir);
+  const db = drizzle(client, drizzleOptions);
   await migrate(db, { migrationsFolder });
-  return db;
+  return { db, close: () => client.close() };
 }

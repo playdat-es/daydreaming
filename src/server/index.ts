@@ -1,16 +1,14 @@
 import { APP_PRODUCT_NAME } from "../shared/branding.js";
 import { createApp } from "./app.js";
-import { createDb, type Db } from "./db/index.js";
+import { createDb } from "./db/index.js";
 import { env } from "./env.js";
 
 async function main(): Promise<void> {
-  let db: Db;
-  try {
-    db = await createDb(env);
-  } catch (err) {
+  const inst = await createDb(env).catch((err) => {
     console.error("failed to initialize database", err);
     process.exit(1);
-  }
+  });
+  const { db, close } = inst;
 
   const app = createApp({ db });
 
@@ -21,9 +19,7 @@ async function main(): Promise<void> {
   async function shutdown(signal: string): Promise<void> {
     console.log(`${signal} received, shutting down`);
     await new Promise<void>((resolve) => server.close(() => resolve()));
-    const client = (db as { $client?: { close?: () => Promise<void> } })
-      .$client;
-    if (client?.close) await client.close();
+    await close();
     process.exit(0);
   }
 
