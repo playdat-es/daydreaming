@@ -15,7 +15,10 @@ const envSchema = z
           .map((o) => o.trim())
           .filter(Boolean),
       ),
-    DATABASE_URL: z.string().url().optional(),
+    DATABASE_URL: z
+      .union([z.string().url(), z.literal("")])
+      .optional()
+      .transform((v) => (v === "" ? undefined : v)),
   })
   .superRefine((e, ctx) => {
     if (e.NODE_ENV === "production" && !e.DATABASE_URL) {
