@@ -1,7 +1,3 @@
-import dotenv from "dotenv";
-
-dotenv.config({ quiet: true });
-
 import { APP_PRODUCT_NAME } from "../shared/branding.js";
 import { createApp } from "./app.js";
 import { createDb } from "./db/index.js";
