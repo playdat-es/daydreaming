@@ -1,6 +1,6 @@
 import { neon } from "@neondatabase/serverless";
-import type { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
 import { drizzle } from "drizzle-orm/neon-http";
+import type { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
 import * as schema from "./schema.js";
 
 export type Schema = typeof schema;

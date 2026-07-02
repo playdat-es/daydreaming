@@ -1,6 +1,6 @@
+import type { Express } from "express";
 import request from "supertest";
 import { beforeAll, describe, expect, test } from "vitest";
-import type { Express } from "express";
 import { createApp } from "./app.js";
 import { createPgliteDb } from "./db/pglite.js";
 
