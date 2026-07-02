@@ -5,7 +5,10 @@ const envSchema = z
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    PORT: z.coerce.number().int().positive().default(3001),
+    PORT: z.preprocess(
+      (v) => (v === "" ? undefined : v),
+      z.coerce.number().int().positive().default(3001),
+    ),
     CORS_ORIGINS: z
       .string()
       .default("")
