@@ -1,23 +1,40 @@
-import dotenv from "dotenv";
-
-dotenv.config({ quiet: true });
-
 import { APP_PRODUCT_NAME } from "../shared/branding.js";
 import { createApp } from "./app.js";
+import { createDb } from "./db/index.js";
 import { env } from "./env.js";
 
-const app = createApp();
+async function main(): Promise<void> {
+  const inst = await createDb(env).catch((err) => {
+    console.error("failed to initialize database", err);
+    process.exit(1);
+  });
+  const { db, close } = inst;
 
-const server = app.listen(env.PORT, "0.0.0.0", () => {
-  console.log(`${APP_PRODUCT_NAME} running on http://localhost:${env.PORT}`);
-});
+  const app = createApp({ db });
 
-function shutdown(signal: string): void {
-  console.log(`${signal} received, shutting down`);
-  server.close(() => process.exit(0));
-  setTimeout(() => process.exit(1), 10_000).unref();
+  const server = app.listen(env.PORT, "0.0.0.0", () => {
+    console.log(`${APP_PRODUCT_NAME} running on http://localhost:${env.PORT}`);
+  });
+
+  async function shutdown(signal: string): Promise<void> {
+    console.log(`${signal} received, shutting down`);
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+    await close();
+    process.exit(0);
+  }
+
+  let shuttingDown = false;
+  for (const sig of ["SIGTERM", "SIGINT"] as const) {
+    process.on(sig, () => {
+      if (shuttingDown) return;
+      shuttingDown = true;
+      shutdown(sig).catch((err) => {
+        console.error("shutdown failed", err);
+        process.exit(1);
+      });
+      setTimeout(() => process.exit(1), 10_000).unref();
+    });
+  }
 }
 
-for (const sig of ["SIGTERM", "SIGINT"] as const) {
-  process.on(sig, () => shutdown(sig));
-}
+await main();

@@ -1,10 +1,16 @@
+import { config } from "dotenv";
 import { z } from "zod";
+
+config({ quiet: true });
+
+const emptyAsUndefined = <T extends z.ZodTypeAny>(schema: T) =>
+  z.preprocess((v) => (v === "" ? undefined : v), schema);
 
 const envSchema = z.object({
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),
-  PORT: z.coerce.number().int().positive().default(3001),
+  PORT: emptyAsUndefined(z.coerce.number().int().positive().default(3001)),
   CORS_ORIGINS: z
     .string()
     .default("")
@@ -14,20 +20,9 @@ const envSchema = z.object({
         .map((o) => o.trim())
         .filter(Boolean),
     ),
+  DATABASE_URL: emptyAsUndefined(z.string().url().optional()),
 });
 
 export type Env = z.infer<typeof envSchema>;
 
-function parseEnv(): Env {
-  const result = envSchema.safeParse(process.env);
-  if (!result.success) {
-    console.error(
-      "Invalid environment variables:",
-      z.treeifyError(result.error),
-    );
-    throw new Error("Invalid environment variables");
-  }
-  return result.data;
-}
-
-export const env: Env = parseEnv();
+export const env: Env = envSchema.parse(process.env);
