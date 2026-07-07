@@ -1,0 +1,374 @@
+import type { Trip, TripDocument, TripInput } from "./trip.js";
+
+// Modeled on the shared Wanderlog trip "NVIDIA Lovers Only" (Jun 12–21, 2026).
+// Flights are transport legs on travel days; place stops carry reservation times.
+const document: TripDocument = {
+  destinations: [
+    "San Jose",
+    "Santa Cruz",
+    "San Francisco",
+    "Monterey",
+    "Carmel",
+  ],
+  author: "dpan117",
+  days: [
+    {
+      id: "day-06-12",
+      date: "2026-06-12",
+      city: "Travel",
+      items: [
+        {
+          id: "trn-bdl-rdu",
+          type: "transport",
+          order: 0,
+          mode: "flight",
+          from: { code: "BDL", time: "2026-06-12T07:10:00-04:00" },
+          to: { code: "RDU", time: "2026-06-12T09:03:00-04:00" },
+          carrier: "Breeze Airways",
+          service: "MX 540",
+        },
+        {
+          id: "trn-rdu-cmh",
+          type: "transport",
+          order: 1,
+          mode: "flight",
+          from: { code: "RDU", time: "2026-06-12T09:50:00-04:00" },
+          to: { code: "CMH", time: "2026-06-12T11:17:00-04:00" },
+          carrier: "Breeze Airways",
+          service: "MX 744",
+        },
+      ],
+    },
+    {
+      id: "day-06-14",
+      date: "2026-06-14",
+      city: "Travel",
+      items: [
+        {
+          id: "trn-jfk-sfo",
+          type: "transport",
+          order: 0,
+          mode: "flight",
+          from: { code: "JFK", time: "2026-06-14T07:30:00-04:00" },
+          to: { code: "SFO", time: "2026-06-14T10:52:00-07:00" },
+          carrier: "American Airlines",
+          service: "AA 179",
+        },
+        {
+          id: "trn-atl-sjc",
+          type: "transport",
+          order: 1,
+          mode: "flight",
+          from: { code: "ATL", time: "2026-06-14T20:59:00-04:00" },
+          to: { code: "SJC", time: "2026-06-14T22:57:00-07:00" },
+          carrier: "Delta Air Lines",
+          service: "DL 933",
+        },
+      ],
+    },
+    {
+      id: "day-06-15",
+      date: "2026-06-15",
+      city: "San Jose",
+      items: [
+        {
+          id: "stp-nvidia",
+          type: "place",
+          order: 0,
+          place: { name: "NVIDIA", category: "landmark" },
+        },
+        {
+          id: "stp-santana-row",
+          type: "place",
+          order: 1,
+          place: { name: "Santana Row", category: "shopping" },
+        },
+        {
+          id: "stp-bowlero",
+          type: "place",
+          order: 2,
+          place: { name: "Bowlero Valley Fair", category: "entertainment" },
+        },
+        {
+          id: "stp-din-tai-fung",
+          type: "place",
+          order: 3,
+          place: { name: "Din Tai Fung", category: "restaurant" },
+          reservation: { time: "16:00" },
+        },
+      ],
+    },
+    {
+      id: "day-06-16",
+      date: "2026-06-16",
+      city: "Santa Cruz",
+      items: [
+        {
+          id: "stp-rockys-cafe",
+          type: "place",
+          order: 0,
+          place: { name: "Rocky's Cafe", category: "cafe" },
+        },
+        {
+          id: "stp-henry-cowell",
+          type: "place",
+          order: 1,
+          place: {
+            name: "Henry Cowell Redwoods State Park",
+            category: "nature",
+          },
+        },
+        {
+          id: "stp-roaring-camp",
+          type: "place",
+          order: 2,
+          place: { name: "Roaring Camp", category: "entertainment" },
+          reservation: { time: "13:30", endTime: "14:45" },
+        },
+        {
+          id: "stp-natural-bridges",
+          type: "place",
+          order: 3,
+          place: { name: "Natural Bridges State Beach", category: "beach" },
+        },
+        {
+          id: "stp-lighthouse-field",
+          type: "place",
+          order: 4,
+          place: { name: "Lighthouse Field State Beach", category: "beach" },
+        },
+        {
+          id: "stp-santa-cruz-wharf",
+          type: "place",
+          order: 5,
+          place: { name: "Santa Cruz Wharf", category: "landmark" },
+        },
+        {
+          id: "stp-crows-nest",
+          type: "place",
+          order: 6,
+          place: { name: "Crow's Nest Restaurant", category: "restaurant" },
+          reservation: { time: "19:00" },
+        },
+      ],
+    },
+    {
+      id: "day-06-17",
+      date: "2026-06-17",
+      city: "Portola Valley",
+      items: [
+        {
+          id: "stp-stevens-creek",
+          type: "place",
+          order: 0,
+          place: { name: "Stevens Creek County Park", category: "nature" },
+        },
+        {
+          id: "stp-peters-creek",
+          type: "place",
+          order: 1,
+          place: { name: "Peters Creek Trailhead", category: "nature" },
+        },
+        {
+          id: "stp-alices",
+          type: "place",
+          order: 2,
+          place: { name: "Alice's Restaurant", category: "restaurant" },
+        },
+        {
+          id: "stp-mikiya",
+          type: "place",
+          order: 3,
+          place: { name: "Mikiya Wagyu Shabu House", category: "restaurant" },
+        },
+      ],
+    },
+    {
+      id: "day-06-18",
+      date: "2026-06-18",
+      city: "San Francisco",
+      items: [
+        {
+          id: "stp-golden-gate",
+          type: "place",
+          order: 0,
+          place: { name: "Golden Gate Bridge", category: "landmark" },
+        },
+        {
+          id: "stp-presidio",
+          type: "place",
+          order: 1,
+          place: { name: "Presidio of San Francisco", category: "nature" },
+        },
+        {
+          id: "stp-embarcadero-parking",
+          type: "place",
+          order: 2,
+          place: {
+            name: "Three Embarcadero Center Parking",
+            category: "parking",
+          },
+          notes: "Lot #76",
+        },
+        {
+          id: "stp-exploratorium",
+          type: "place",
+          order: 3,
+          place: { name: "Exploratorium", category: "museum" },
+        },
+        {
+          id: "stp-alcatraz",
+          type: "place",
+          order: 4,
+          place: { name: "Alcatraz Island", category: "landmark" },
+          reservation: { time: "15:50", endTime: "16:35" },
+        },
+        {
+          id: "stp-prime-rib",
+          type: "place",
+          order: 5,
+          place: { name: "House of Prime Rib", category: "restaurant" },
+          reservation: { time: "21:00" },
+        },
+      ],
+    },
+    {
+      id: "day-06-19",
+      date: "2026-06-19",
+      city: "Monterey",
+      items: [
+        {
+          id: "stp-monterey",
+          type: "place",
+          order: 0,
+          place: { name: "Monterey", category: "landmark" },
+        },
+        {
+          id: "stp-monterey-aquarium",
+          type: "place",
+          order: 1,
+          place: { name: "Monterey Bay Aquarium", category: "museum" },
+        },
+        {
+          id: "stp-carmel",
+          type: "place",
+          order: 2,
+          place: { name: "Carmel-by-the-Sea", category: "beach" },
+        },
+        {
+          id: "stp-foray",
+          type: "place",
+          order: 3,
+          place: { name: "Foray", category: "restaurant" },
+          reservation: { time: "19:00" },
+        },
+      ],
+    },
+    {
+      id: "day-06-20",
+      date: "2026-06-20",
+      city: "San Jose",
+      items: [
+        {
+          id: "stp-topgolf",
+          type: "place",
+          order: 0,
+          place: { name: "Topgolf", category: "entertainment" },
+        },
+        {
+          id: "stp-amc-mercado",
+          type: "place",
+          order: 1,
+          place: { name: "AMC Mercado 20", category: "entertainment" },
+        },
+        {
+          id: "stp-haidilao",
+          type: "place",
+          order: 2,
+          place: { name: "Haidilao Hot Pot Cupertino", category: "restaurant" },
+          reservation: { time: "13:15" },
+        },
+        {
+          id: "stp-apple-park",
+          type: "place",
+          order: 3,
+          place: { name: "Apple Park Visitor Center", category: "shopping" },
+        },
+      ],
+    },
+    {
+      id: "day-06-21",
+      date: "2026-06-21",
+      city: "Travel",
+      items: [
+        {
+          id: "trn-sfo-clt",
+          type: "transport",
+          order: 0,
+          mode: "flight",
+          from: { code: "SFO", time: "2026-06-21T05:14:00-07:00" },
+          to: { code: "CLT", time: "2026-06-21T13:30:00-04:00" },
+          carrier: "American Airlines",
+          service: "AA 3082",
+        },
+        {
+          id: "trn-sfo-jfk",
+          type: "transport",
+          order: 1,
+          mode: "flight",
+          from: { code: "SFO", time: "2026-06-21T06:15:00-07:00" },
+          to: { code: "JFK", time: "2026-06-21T14:59:00-04:00" },
+          carrier: "American Airlines",
+          service: "AA 234",
+        },
+        {
+          id: "trn-clt-bdl",
+          type: "transport",
+          order: 2,
+          mode: "flight",
+          from: { code: "CLT", time: "2026-06-21T14:34:00-04:00" },
+          to: { code: "BDL", time: "2026-06-21T16:33:00-04:00" },
+          carrier: "American Airlines",
+          service: "AA 1443",
+        },
+      ],
+    },
+  ],
+  lodging: [
+    {
+      id: "ldg-extended-stay",
+      place: {
+        name: "Extended Stay America Suites - San Jose/Santa Clara",
+        category: "other",
+      },
+      checkIn: "2026-06-14",
+      checkOut: "2026-06-21",
+      amenities: ["full kitchen", "breakfast"],
+    },
+    {
+      id: "ldg-domain",
+      place: { name: "Domain Apartments", category: "other" },
+      checkIn: "2026-06-14",
+      checkOut: "2026-06-21",
+    },
+  ],
+};
+
+export const SAMPLE_TRIP_INPUT: TripInput = {
+  title: "NVIDIA Lovers Only",
+  startDate: "2026-06-12",
+  endDate: "2026-06-21",
+  source: "wanderlog",
+  document,
+};
+
+export const SAMPLE_TRIP: Trip = {
+  id: "trip-nvidia-lovers-only",
+  title: SAMPLE_TRIP_INPUT.title,
+  startDate: SAMPLE_TRIP_INPUT.startDate,
+  endDate: SAMPLE_TRIP_INPUT.endDate,
+  source: "wanderlog",
+  createdAt: "2026-06-30T00:00:00.000Z",
+  updatedAt: "2026-06-30T00:00:00.000Z",
+  ...document,
+};
