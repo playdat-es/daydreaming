@@ -9,8 +9,10 @@ describe("trip data model", () => {
 
   it("keeps the sample trip and its input document in sync", () => {
     const parsed = tripInputSchema.parse(SAMPLE_TRIP_INPUT);
-    expect(SAMPLE_TRIP.days).toEqual(parsed.document.days);
-    expect(SAMPLE_TRIP.lodging).toEqual(parsed.document.lodging);
+    const { destinations, coverImageUrl, author, days, lodging } = SAMPLE_TRIP;
+    expect({ destinations, coverImageUrl, author, days, lodging }).toEqual(
+      parsed.document,
+    );
   });
 
   it("rejects an itinerary item with an unknown type", () => {

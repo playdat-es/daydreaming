@@ -14,13 +14,13 @@ export const trips = pgTable("trips", {
   endDate: text("end_date").notNull(),
   source: tripSourceEnum("source").notNull().default("manual"),
   document: jsonb("document").$type<TripDocument>().notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true })
+  createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
     .notNull()
     .defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
+  updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
     .notNull()
     .defaultNow()
-    .$onUpdate(() => new Date()),
+    .$onUpdate(() => new Date().toISOString()),
 });
 
 export type TripRow = typeof trips.$inferSelect;
