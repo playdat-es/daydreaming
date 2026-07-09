@@ -42,8 +42,8 @@ export const geoPlaceSchema = z.object({
 export type GeoPlace = z.infer<typeof geoPlaceSchema>;
 
 export const reservationSchema = z.object({
-  time: z.string(),
-  endTime: z.string().optional(),
+  time: z.iso.time(),
+  endTime: z.iso.time().optional(),
   confirmation: z.string().optional(),
   partySize: z.number().int().optional(),
 });
@@ -62,7 +62,7 @@ export type PlaceStop = z.infer<typeof placeStopSchema>;
 export const transportEndpointSchema = z.object({
   name: z.string().optional(),
   code: z.string().optional(),
-  time: z.string().optional(),
+  time: z.iso.datetime({ offset: true }).optional(),
 });
 export type TransportEndpoint = z.infer<typeof transportEndpointSchema>;
 
@@ -108,7 +108,7 @@ export type ItineraryItem = z.infer<typeof itineraryItemSchema>;
 
 export const daySchema = z.object({
   id: z.string(),
-  date: z.string(),
+  date: z.iso.date(),
   city: z.string().optional(),
   items: z.array(itineraryItemSchema).default([]),
 });
@@ -117,8 +117,8 @@ export type Day = z.infer<typeof daySchema>;
 export const lodgingSchema = z.object({
   id: z.string(),
   place: geoPlaceSchema,
-  checkIn: z.string(),
-  checkOut: z.string(),
+  checkIn: z.iso.date(),
+  checkOut: z.iso.date(),
   amenities: z.array(z.string()).optional(),
 });
 export type Lodging = z.infer<typeof lodgingSchema>;
@@ -136,8 +136,8 @@ export type TripDocument = z.infer<typeof tripDocumentSchema>;
 // Request body for create/update — the server owns id and timestamps.
 export const tripInputSchema = z.object({
   title: z.string(),
-  startDate: z.string(),
-  endDate: z.string(),
+  startDate: z.iso.date(),
+  endDate: z.iso.date(),
   source: z.enum(TRIP_SOURCES).default("manual"),
   document: tripDocumentSchema,
 });
