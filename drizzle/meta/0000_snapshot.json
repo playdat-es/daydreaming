@@ -1,5 +1,5 @@
 {
-  "id": "55a5df9f-9824-4f05-bd3d-9f944081ec02",
+  "id": "a3342648-fb25-42a1-a17a-4f180e7af81e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -34,11 +34,9 @@
         },
         "source": {
           "name": "source",
-          "type": "trip_source",
-          "typeSchema": "public",
+          "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'manual'"
+          "notNull": false
         },
         "document": {
           "name": "document",
@@ -70,16 +68,7 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {
-    "public.trip_source": {
-      "name": "trip_source",
-      "schema": "public",
-      "values": [
-        "wanderlog",
-        "manual"
-      ]
-    }
-  },
+  "enums": {},
   "schemas": {},
   "sequences": {},
   "roles": {},

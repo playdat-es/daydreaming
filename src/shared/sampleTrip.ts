@@ -1,6 +1,6 @@
 import type { Trip, TripDocument, TripInput } from "./trip.js";
 
-// Modeled on the shared Wanderlog trip "NVIDIA Lovers Only" (Jun 12–21, 2026).
+// A fictional multi-city Bay Area trip used to exercise the full model.
 // Flights are transport legs on travel days; place stops carry reservation times.
 const document: TripDocument = {
   destinations: [
@@ -10,7 +10,6 @@ const document: TripDocument = {
     "Monterey",
     "Carmel",
   ],
-  author: "dpan117",
   days: [
     {
       id: "day-06-12",
@@ -81,13 +80,13 @@ const document: TripDocument = {
           id: "stp-santana-row",
           type: "place",
           order: 1,
-          place: { name: "Santana Row", category: "shopping" },
+          place: { name: "Santana Row", category: "activity" },
         },
         {
           id: "stp-bowlero",
           type: "place",
           order: 2,
-          place: { name: "Bowlero Valley Fair", category: "entertainment" },
+          place: { name: "Bowlero Valley Fair", category: "activity" },
         },
         {
           id: "stp-din-tai-fung",
@@ -107,7 +106,7 @@ const document: TripDocument = {
           id: "stp-rockys-cafe",
           type: "place",
           order: 0,
-          place: { name: "Rocky's Cafe", category: "cafe" },
+          place: { name: "Rocky's Cafe", category: "restaurant" },
         },
         {
           id: "stp-henry-cowell",
@@ -122,20 +121,20 @@ const document: TripDocument = {
           id: "stp-roaring-camp",
           type: "place",
           order: 2,
-          place: { name: "Roaring Camp", category: "entertainment" },
+          place: { name: "Roaring Camp", category: "activity" },
           reservation: { time: "13:30", endTime: "14:45" },
         },
         {
           id: "stp-natural-bridges",
           type: "place",
           order: 3,
-          place: { name: "Natural Bridges State Beach", category: "beach" },
+          place: { name: "Natural Bridges State Beach", category: "nature" },
         },
         {
           id: "stp-lighthouse-field",
           type: "place",
           order: 4,
-          place: { name: "Lighthouse Field State Beach", category: "beach" },
+          place: { name: "Lighthouse Field State Beach", category: "nature" },
         },
         {
           id: "stp-santa-cruz-wharf",
@@ -206,7 +205,7 @@ const document: TripDocument = {
           order: 2,
           place: {
             name: "Three Embarcadero Center Parking",
-            category: "parking",
+            category: "other",
           },
           notes: "Lot #76",
         },
@@ -214,7 +213,7 @@ const document: TripDocument = {
           id: "stp-exploratorium",
           type: "place",
           order: 3,
-          place: { name: "Exploratorium", category: "museum" },
+          place: { name: "Exploratorium", category: "landmark" },
         },
         {
           id: "stp-alcatraz",
@@ -247,13 +246,13 @@ const document: TripDocument = {
           id: "stp-monterey-aquarium",
           type: "place",
           order: 1,
-          place: { name: "Monterey Bay Aquarium", category: "museum" },
+          place: { name: "Monterey Bay Aquarium", category: "landmark" },
         },
         {
           id: "stp-carmel",
           type: "place",
           order: 2,
-          place: { name: "Carmel-by-the-Sea", category: "beach" },
+          place: { name: "Carmel-by-the-Sea", category: "nature" },
         },
         {
           id: "stp-foray",
@@ -273,13 +272,13 @@ const document: TripDocument = {
           id: "stp-topgolf",
           type: "place",
           order: 0,
-          place: { name: "Topgolf", category: "entertainment" },
+          place: { name: "Topgolf", category: "activity" },
         },
         {
           id: "stp-amc-mercado",
           type: "place",
           order: 1,
-          place: { name: "AMC Mercado 20", category: "entertainment" },
+          place: { name: "AMC Mercado 20", category: "activity" },
         },
         {
           id: "stp-haidilao",
@@ -292,7 +291,7 @@ const document: TripDocument = {
           id: "stp-apple-park",
           type: "place",
           order: 3,
-          place: { name: "Apple Park Visitor Center", category: "shopping" },
+          place: { name: "Apple Park Visitor Center", category: "activity" },
         },
       ],
     },
@@ -337,17 +336,14 @@ const document: TripDocument = {
   lodging: [
     {
       id: "ldg-extended-stay",
-      place: {
-        name: "Extended Stay America Suites - San Jose/Santa Clara",
-        category: "other",
-      },
+      place: { name: "Extended-stay hotel", category: "other" },
       checkIn: "2026-06-14",
       checkOut: "2026-06-21",
       amenities: ["full kitchen", "breakfast"],
     },
     {
-      id: "ldg-domain",
-      place: { name: "Domain Apartments", category: "other" },
+      id: "ldg-serviced-apartment",
+      place: { name: "Serviced apartment", category: "other" },
       checkIn: "2026-06-14",
       checkOut: "2026-06-21",
     },
@@ -355,7 +351,7 @@ const document: TripDocument = {
 };
 
 export const SAMPLE_TRIP_INPUT: TripInput = {
-  title: "NVIDIA Lovers Only",
+  title: "Bay Area Summer Trip",
   startDate: "2026-06-12",
   endDate: "2026-06-21",
   source: "wanderlog",
@@ -363,7 +359,7 @@ export const SAMPLE_TRIP_INPUT: TripInput = {
 };
 
 export const SAMPLE_TRIP: Trip = {
-  id: "trip-nvidia-lovers-only",
+  id: "trip-bay-area-summer",
   title: SAMPLE_TRIP_INPUT.title,
   startDate: SAMPLE_TRIP_INPUT.startDate,
   endDate: SAMPLE_TRIP_INPUT.endDate,

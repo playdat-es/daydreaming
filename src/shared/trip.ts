@@ -1,15 +1,10 @@
 import { z } from "zod";
 
 export const ITEM_CATEGORIES = [
-  "landmark",
   "nature",
+  "landmark",
+  "activity",
   "restaurant",
-  "cafe",
-  "shopping",
-  "entertainment",
-  "museum",
-  "beach",
-  "parking",
   "other",
 ] as const;
 export type ItemCategory = (typeof ITEM_CATEGORIES)[number];
@@ -17,17 +12,11 @@ export type ItemCategory = (typeof ITEM_CATEGORIES)[number];
 export const TRANSPORT_MODES = [
   "flight",
   "train",
-  "drive",
-  "bus",
-  "ferry",
-  "rideshare",
-  "transit",
+  "drive", // rental car or rideshare
+  "transit", // subway or bus
   "other",
 ] as const;
 export type TransportMode = (typeof TRANSPORT_MODES)[number];
-
-export const TRIP_SOURCES = ["wanderlog", "manual"] as const;
-export type TripSource = (typeof TRIP_SOURCES)[number];
 
 export const geoPlaceSchema = z.object({
   name: z.string(),
@@ -95,9 +84,6 @@ export const transportSchema = z.discriminatedUnion("mode", [
     distanceKm: z.number().optional(),
     rentalConfirmation: z.string().optional(),
   }),
-  transportBase.extend({ mode: z.literal("bus") }),
-  transportBase.extend({ mode: z.literal("ferry") }),
-  transportBase.extend({ mode: z.literal("rideshare") }),
   transportBase.extend({ mode: z.literal("transit") }),
   transportBase.extend({ mode: z.literal("other") }),
 ]);
@@ -138,7 +124,8 @@ export const tripInputSchema = z.object({
   title: z.string(),
   startDate: z.iso.date(),
   endDate: z.iso.date(),
-  source: z.enum(TRIP_SOURCES).default("manual"),
+  // The importer a trip came from (e.g. "wanderlog"); null means none recorded.
+  source: z.string().nullable().default(null),
   document: tripDocumentSchema,
 });
 export type TripInput = z.infer<typeof tripInputSchema>;
@@ -149,7 +136,7 @@ export type Trip = TripDocument & {
   title: string;
   startDate: string;
   endDate: string;
-  source: TripSource;
+  source: string | null;
   createdAt: string;
   updatedAt: string;
 };

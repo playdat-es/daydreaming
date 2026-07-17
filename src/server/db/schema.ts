@@ -1,8 +1,5 @@
-import { jsonb, pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { TRIP_SOURCES, type TripDocument } from "../../shared/trip.js";
-
-// Enforced at the DB layer so a direct write can't drift from the Zod contract.
-export const tripSourceEnum = pgEnum("trip_source", TRIP_SOURCES);
+import { jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import type { TripDocument } from "../../shared/trip.js";
 
 // A trip is the aggregate root. Scalar columns support the trip list without
 // parsing JSON; the nested itinerary lives in the `document` jsonb column, so
@@ -12,7 +9,7 @@ export const trips = pgTable("trips", {
   title: text("title").notNull(),
   startDate: text("start_date").notNull(),
   endDate: text("end_date").notNull(),
-  source: tripSourceEnum("source").notNull().default("manual"),
+  source: text("source"),
   document: jsonb("document").$type<TripDocument>().notNull(),
   createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
     .notNull()
